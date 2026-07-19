@@ -1,0 +1,83 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.1.0'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.google.protobuf' version '0.9.4'
+    id 'idea'
+    id 'eclipse'
+}
+
+group = 'gRPC-REST.communication'
+version = '0.0.1-SNAPSHOT'
+description = 'REST client'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	maven { // The google mirror is less flaky than mavenCentral()
+        url = "https://maven-central.storage-download.googleapis.com/maven2/" 
+    }
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-h2console'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.h2database:h2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webflux-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	
+	//################ GRPC ################
+	implementation 'io.grpc:grpc-netty-shaded:1.68.0'
+	implementation 'io.grpc:grpc-protobuf:1.68.0'
+	implementation 'io.grpc:grpc-services:1.68.0'
+	implementation 'io.grpc:grpc-stub:1.68.0'
+	compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
+    //################ GRPC ################
+}
+
+// Inform IDEs like IntelliJ IDEA, Eclipse or NetBeans about the generated code.
+sourceSets {
+    main {
+    	// Remember to refresh gradle project in Eclipse (F5) 
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+//################ GRPC ################
+// Inform IDEs like IntelliJ IDEA, Eclipse or NetBeans about the generated code.
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc:3.25.5"
+  }
+  plugins {
+    grpc {
+      artifact = 'io.grpc:protoc-gen-grpc-java:1.68.0'
+    }
+  }
+  generateProtoTasks {
+    all()*.plugins {
+      grpc {}
+    }
+    all().each {
+      it.group = 'build'
+    }
+  }
+}
+//################ GRPC ################

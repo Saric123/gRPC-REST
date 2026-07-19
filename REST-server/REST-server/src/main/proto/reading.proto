@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "gRPC.on.REST.server.side";
+
+package REST.server;
+
+// The reading service definition.
+service Reading {
+  rpc RequestReading (Message) returns (Message) {}
+}
+
+message Message {
+  string  temperature = 1;
+  string  pressure = 2;
+  string humidity = 3;
+  string co = 4;
+  string no2 = 5;
+  string so2 = 6;
+}
