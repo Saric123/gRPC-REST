@@ -1,5 +1,6 @@
 # gRPC-REST
 
+Project is implemented in Java as two gradle projects.
 This project implements sensor monitoring and information exchange. Sensors communicate using grpc framework. Each sensor receives sensor reading data from neighbor. Neighbor to a sensor is determined at the startup using minimum distance criteria. After receiving data from sensor, each sensort calibrates its own current reading and sends it to REST server.
 
 Messages class used for inter-sensor communication is generated using .proto file. If you change anything in that .proto file, project has to be rebuilt with "gradlew build" and refreshed so that change is seen. Sensors have to be started each on its own grpc server port.
